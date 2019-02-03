@@ -6,13 +6,17 @@ from english import to_piglatin
 
 @click.command()
 @click.option('--english/--piglatin', default=None, help='Text is English/Piglatin')
-@click.argument('filename')
+@click.argument('file', default=None, required=False, type=click.File('r'))
 def translate(english, filename):
     if english is None:
         english = isenglish(text)
+    if file is None:
+        text = input()
+    else:
+        text = file.read()
 
-
-    click.echo('Hello World!')
+    out = to_piglatin(text) if english else to_english(text)
+    click.echo(out)
 
 whitespace = re.compile(r'\s+')
 def is_english(text):
@@ -25,3 +29,6 @@ def is_english(text):
     if count/total > .8:
         return False
     return True
+
+if __name__ == '__main__':
+    translate()
